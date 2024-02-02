@@ -11,6 +11,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/ivsaez/Desiring</RepositoryUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
