@@ -7,6 +7,8 @@ namespace Desiring
     {
         private ISet<string> desires;
 
+        public bool Any => desires.Any();
+
         public Desires(params Desire[] desires)
         {
             this.desires = new HashSet<string>(desires.Select(d => d.Id));
