@@ -3,6 +3,7 @@ using Agents;
 using Desiring.Tests.Lang;
 using ItemsLang.Lang;
 using Languager;
+using Mapping;
 using Outputer;
 using Outputer.Choicing;
 using Rolling;
@@ -32,7 +33,7 @@ namespace Desiring.Tests
             agent1.Relations.Add(agent2.Id, RelationFactory.Get(RelationKind.Neutral));
             agent2.Relations.Add(agent1.Id, RelationFactory.Get(RelationKind.Neutral));
 
-            var mapped = new DesiringMapped("mapped");
+            var mapped = new DesiringMapped("mapped", Externality.External);
 
             world = new World(MachineBuilder.Create()
                 .WithState("Initial")
@@ -67,10 +68,11 @@ namespace Desiring.Tests
             var roles = new Roles(storylet.InvolvedRoles)
                 .Match(Descriptor.MainRole, agent1);
 
-            var story = storylet.Execute(world, roles, new Historic());
+            var historic = new Historic();
+            var story = storylet.Execute(world, roles, historic);
             var step = story.Interact(Input.Void);
 
-            int decisionIndex = agent1.Decider.Decide(world, step.Choices, roles, agent1.Desires, desireVault);
+            int decisionIndex = agent1.Decider.Decide(world, step.Choices, roles, historic, agent1.Desires, desireVault);
 
             Assert.Equal(1, decisionIndex);
         }
@@ -92,10 +94,11 @@ namespace Desiring.Tests
             var roles = new Roles(storylet.InvolvedRoles)
                 .Match(Descriptor.MainRole, agent1);
 
-            var story = storylet.Execute(world, roles, new Historic());
+            var historic = new Historic();
+            var story = storylet.Execute(world, roles, historic);
             var step = story.Interact(Input.Void);
 
-            int decisionIndex = agent1.Decider.Decide(world, step.Choices, roles, agent1.Desires, desireVault);
+            int decisionIndex = agent1.Decider.Decide(world, step.Choices, roles, historic, agent1.Desires, desireVault);
 
             Assert.Equal(2, decisionIndex);
         }
@@ -113,21 +116,21 @@ namespace Desiring.Tests
             StoryletBuilder.Create("storylet")
                 .BeingGlobalSingle()
                 .ForMachines()
-                .WithInteraction((world, roles) =>
+                .WithInteraction((post) =>
                 {
                     return Output.FromTexts("Choose");
                 })
-                    .WithSubinteraction((world, roles) =>
+                    .WithSubinteraction((post) =>
                     {
-                        var agent2 = world.Agents.GetOne("agent2") as DesiringAgent;
+                        var agent2 = post.World.Agents.GetOne("agent2") as DesiringAgent;
                         agent2!.Relations.Get("agent1").Metrics.IncreaseFriendship(100);
 
                         return Output.FromTexts("GOOD");
                     })
                     .Build()
-                    .WithSubinteraction((world, roles) =>
+                    .WithSubinteraction((post) =>
                     {
-                        var agent2 = world.Agents.GetOne("agent2") as DesiringAgent;
+                        var agent2 = post.World.Agents.GetOne("agent2") as DesiringAgent;
                         agent2!.Relations.Get("agent1").Metrics.DecreaseFriendship(100);
 
                         return Output.FromTexts("BAD");

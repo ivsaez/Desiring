@@ -43,6 +43,8 @@ namespace Desiring.Tests
 
         public Output OnTurnPassed(IWorld world, int turns) => null;
 
+        public Output OnTurnPassed(IWorld world, uint turns) => Output.Empty;
+
         public Save ToSave() => null;
     }
 }
