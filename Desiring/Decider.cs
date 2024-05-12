@@ -8,9 +8,15 @@ namespace Desiring
 {
     public class Decider
     {
-        public int Decide(World world, Choices choices, Roles roles, Desires desires, DesireVault vault) =>
+        public int Decide(
+            World world, 
+            Choices choices, 
+            Roles roles, 
+            Historic historic, 
+            Desires desires, 
+            DesireVault vault) =>
             desires.Any
-                ? getDesiredSelection(world, choices, roles, desires, vault)
+                ? getDesiredSelection(world, choices, roles, historic, desires, vault)
                 : getPrioritySelection(choices);
 
         private int getPrioritySelection(Choices choices)
@@ -25,15 +31,23 @@ namespace Desiring
             return participations.Random();
         }
 
-        private int getDesiredSelection(World world, Choices choices, Roles roles, Desires desires, DesireVault vault)
+        private int getDesiredSelection(
+            World world, 
+            Choices choices, 
+            Roles roles, 
+            Historic historic, 
+            Desires desires, 
+            DesireVault vault)
         {
             var heuristics = new List<(int HeuristicValue, IndexedOption Option)>();
             foreach (var option in choices.Options)
             {
                 var worldClone = (World)world.Clone();
                 var clonedRoles = getClonedRoles(worldClone, roles);
+                var historicClone = (Historic)historic.Clone();
+
                 var interaction = (Interaction)option.Function();
-                interaction.Execute(worldClone, clonedRoles);
+                interaction.Execute(new PredefinedPostconditions(worldClone, clonedRoles, historicClone));
 
                 var heuristicValue = desires.Heuristic(worldClone, vault);
                 heuristics.Add((heuristicValue, option));
