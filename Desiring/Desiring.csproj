@@ -12,7 +12,7 @@
     <RepositoryUrl>https://github.com/ivsaez/Desiring</RepositoryUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.2.3</Version>
+    <Version>1.2.4</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,12 +27,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="isz-Agents" Version="3.2.0" />
+    <PackageReference Include="isz-Agents" Version="3.3.0" />
     <PackageReference Include="isz-Identification" Version="1.6.0" />
     <PackageReference Include="isz-Rand" Version="1.3.0" />
     <PackageReference Include="isz-Saver" Version="2.2.0" />
-    <PackageReference Include="isz-Stories" Version="1.6.3" />
-    <PackageReference Include="isz-Worlding" Version="1.10.1" />
+    <PackageReference Include="isz-Stories" Version="1.7.0" />
+    <PackageReference Include="isz-Worlding" Version="1.11.0" />
   </ItemGroup>
 
 </Project>
